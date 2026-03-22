@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Manrope } from "next/font/google";
 import "./globals.css";
 
@@ -9,7 +9,19 @@ const manrope = Manrope({
 
 export const metadata: Metadata = {
   title: "Wheelz Cart",
-  description: "Home page - Wheelz Cart",
+  description: "A simple functional shopping cart application",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Wheelz Cart",
+  },
+  formatDetection: {
+    telephone: false,
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#000000",
 };
 
 export default function RootLayout({
