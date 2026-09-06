@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Manrope } from "next/font/google";
 import "./globals.css";
+import ThemeProvider from "@/components/ThemeProvider";
 
 const manrope = Manrope({
   subsets: ['latin'],
@@ -8,12 +9,12 @@ const manrope = Manrope({
 })
 
 export const metadata: Metadata = {
-  title: "Wheelz Cart",
-  description: "A simple functional shopping cart application",
+  title: "WheelzCart – Premium Alloy Wheels",
+  description: "Premium alloy wheels for every car brand. Shop by size, PCD, and compatibility.",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Wheelz Cart",
+    title: "WheelzCart – Premium Alloy Wheels",
   },
   formatDetection: {
     telephone: false,
@@ -47,8 +48,9 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
       </head>
       <body
-        className={`${manrope.variable} antialiased max-w-md mx-auto`}
+        className={`${manrope.variable} antialiased max-w-7xl mx-auto overflow-x-hidden relative shadow-2xl shadow-black/10`}
       >
+        <ThemeProvider />
         {children}
       </body>
     </html>

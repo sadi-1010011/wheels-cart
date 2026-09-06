@@ -29,9 +29,9 @@ export default function SplashScreen() {
         }}
       >
         {/* ── Ambient streak lights ── */}
-        <div className="streak-1 absolute -left-24 top-1/4 w-[700px] h-[350px] rounded-full"
+        <div className="streak-1 absolute -left-24 top-1/4 w-175 h-87.5 rounded-full"
           style={{ background: "radial-gradient(ellipse, rgba(59,130,246,0.12) 0%, transparent 70%)" }} />
-        <div className="streak-2 absolute -right-24 bottom-1/4 w-[600px] h-[300px] rounded-full"
+        <div className="streak-2 absolute -right-24 bottom-1/4 w-150 h-75 rounded-full"
           style={{ background: "radial-gradient(ellipse, rgba(99,102,241,0.10) 0%, transparent 70%)" }} />
 
         {/* ── Subtle grid texture ── */}
@@ -91,7 +91,7 @@ export default function SplashScreen() {
                   filter: "drop-shadow(0 0 12px rgba(59,130,246,0.7))",
                 }}
               >
-                directions_car
+                tire_repair
               </span>
             </div>
           </div>
@@ -107,7 +107,7 @@ export default function SplashScreen() {
           {/* Tagline */}
           <p className="anim-tagline font-body text-sm md:text-base font-medium uppercase mb-8"
             style={{ color: "rgba(148,163,184,0.9)", letterSpacing: "0.2em" }}>
-            Premium Parts for the Modern Driver
+            Premium Alloy Wheels for Every Ride
           </p>
 
           {/* Precision divider */}
@@ -130,7 +130,7 @@ export default function SplashScreen() {
         <div className="anim-version relative z-20 flex justify-center pb-8">
           <span className="text-[10px] font-label tracking-[0.4em] uppercase"
             style={{ color: "rgba(100,116,139,0.7)" }}>
-            Premium Quality Spare Parts
+            Premium Quality Alloy Wheels
           </span>
         </div>
 

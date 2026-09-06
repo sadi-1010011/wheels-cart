@@ -6,8 +6,15 @@ import { Suspense, useState } from "react";
 function OrderForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
-    const item = searchParams.get("item") || "Items";
-    const qty = searchParams.get("qty") || "1";
+    const item = searchParams.get("item") || "Wheel";
+    const initialQty = searchParams.get("qty") ? parseInt(searchParams.get("qty") as string) : 1;
+    const size = searchParams.get("size") || "";
+    const pcd = searchParams.get("pcd") || "";
+    const finish = searchParams.get("finish") || "";
+    const price = searchParams.get("price") ? parseInt(searchParams.get("price") as string) : 0;
+    const image = searchParams.get("image") || "";
+
+    const [qty, setQty] = useState(initialQty);
 
     const [formData, setFormData] = useState({
         fullName: "",
@@ -29,7 +36,11 @@ function OrderForm() {
         });
     };
 
-    const handleSubmit = () => {
+    const handleQtyChange = (delta: number) => {
+        setQty((prev) => Math.max(1, Math.min(10, prev + delta)));
+    };
+
+    const handleSubmit = async () => {
         const isFormValid = formData.fullName && formData.phone && formData.address && formData.city && formData.state && formData.pincode;
 
         if (!isFormValid) {
@@ -44,11 +55,35 @@ function OrderForm() {
         }
 
         // Build formatted message
-        const message = `*NEW ORDER REQUEST* 🛒\n\n*Item:* ${item}\n*Quantity:* ${qty}\n\n*Customer Details:*\n*Name:* ${formData.fullName}\n*Phone:* +91 ${formData.phone}\n*WhatsApp:* +91 ${finalWhatsapp}\n*Address:* ${formData.address}, ${formData.city}, ${formData.state} - ${formData.pincode}`;
+        const message = `*NEW ORDER REQUEST* 🛒\n\n*Wheel:* ${item}\n*Size:* ${size}\n*PCD:* ${pcd}\n*Finish:* ${finish}\n*Quantity:* ${qty}\n*Total Price:* ₹${(price * qty).toLocaleString("en-IN")}\n\n*Customer Details:*\n*Name:* ${formData.fullName}\n*Phone:* +91 ${formData.phone}\n*WhatsApp:* +91 ${finalWhatsapp}\n*Address:* ${formData.address}, ${formData.city}, ${formData.state} - ${formData.pincode}`;
 
+        try {
+            // Try sharing with image via Web Share API
+            if (image) {
+                const response = await fetch(image);
+                const blob = await response.blob();
+                const file = new File([blob], `order-${item.replace(/[^a-zA-Z0-9]/g, '-')}.jpg`, { type: blob.type });
+
+                if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                    await navigator.share({
+                        text: message,
+                        files: [file],
+                    });
+                    
+                    // Show success UI and redirect
+                    setShowSuccess(true);
+                    setTimeout(() => {
+                        router.push("/home");
+                    }, 3000);
+                    return;
+                }
+            }
+        } catch (err) {
+            console.log("Image share fallback", err);
+        }
+
+        // Fallback: Open WhatsApp directly
         const encodedMessage = encodeURIComponent(message);
-
-        // Open WhatsApp in a new tab/window
         window.open(`https://wa.me/916238998062?text=${encodedMessage}`, '_blank');
 
         // Show success UI and redirect
@@ -62,18 +97,27 @@ function OrderForm() {
         <div className="relative flex min-h-screen w-full flex-col  bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 antialiased overflow-x-hidden">
             {/* Top Navigation */}
             <div className="sticky top-0 z-10 flex items-center bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md p-4 border-b border-slate-200 dark:border-slate-800 animate-in slide-in-from-top-4 fade-in duration-500">
-                <div onClick={() => router.back()} className="flex size-10 shrink-0 items-center justify-center cursor-pointer rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 transition-all duration-300 hover:scale-110 active:scale-90">
+                <div onClick={() => router.back()} className="flex size-10 shrink-0 items-center justify-center cursor-pointer rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 transition-all duration-300 hover:scale-110 active:scale-90 md:hidden">
                     <span className="material-symbols-outlined text-slate-900 dark:text-slate-100">
                         arrow_back
                     </span>
                 </div>
-                <h2 className="ml-2 text-lg font-bold leading-tight tracking-tight flex-1">
+                <h2 className="ml-2 text-lg md:text-xl font-bold leading-tight tracking-tight flex-1 text-center md:text-left">
                     Order Request Form
                 </h2>
+
+                {/* Desktop Navigation */}
+                <nav className="hidden md:flex flex-1 items-center justify-end gap-8 pr-4">
+                    <a href="/" className="text-sm font-bold text-slate-700 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors">Home</a>
+                    <a href="/shop" className="text-sm font-bold text-slate-700 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors">Shop</a>
+                </nav>
             </div>
 
-            {/* Notification Banner */}
-            <div className="p-4 @container animate-in fade-in zoom-in-95 duration-700 ease-out fill-mode-both" style={{ animationDelay: '100ms' }}>
+            <div className="md:grid md:grid-cols-2 md:gap-8 md:p-8 md:max-w-6xl md:mx-auto w-full">
+                {/* Right Column: Order Summary */}
+                <div className="flex flex-col gap-4 p-4 md:px-0 md:pt-4 order-1 md:order-2 md:sticky md:top-24 h-fit">
+                    {/* Notification Banner */}
+                    <div className="animate-in fade-in zoom-in-95 duration-700 ease-out fill-mode-both" style={{ animationDelay: '100ms' }}>
                 <div className="flex flex-col items-start justify-between gap-4 rounded-xl border border-primary/30 bg-primary/10 p-5 @[480px]:flex-row @[480px]:items-center transition-all duration-300 hover:shadow-md hover:border-primary/50">
                     <div className="flex flex-col gap-1">
                         <div className="flex items-center gap-2">
@@ -90,16 +134,67 @@ function OrderForm() {
                     </div>
                 </div>
 
-                {item !== "Items" && (
-                    <div className="mt-4 flex flex-col items-start gap-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 p-4 transition-all duration-300 hover:shadow-sm">
-                        {/* <p className="text-[10px] uppercase tracking-wider font-bold text-slate-500 dark:text-slate-400 flex items-center justify-end w-full">Selected Product</p> */}
-                        <p className="font-bold text-lg text-primary leading-tight">{item} <span className="text-sm font-medium text-slate-500 ml-2">x {qty}</span></p>
+                {/* Selected Product Summary */}
+                <div className="mt-4 flex flex-col items-start gap-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 p-4 transition-all duration-300 hover:shadow-sm">
+                    <div className="flex w-full gap-4">
+                        {image && (
+                            <div className="w-20 h-20 shrink-0 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-800">
+                                <img src={image} alt={item} className="w-full h-full object-cover" />
+                            </div>
+                        )}
+                        <div className="flex flex-col justify-center flex-1">
+                            <p className="font-bold text-base text-slate-900 dark:text-white leading-tight mb-1">{item}</p>
+                            <div className="flex flex-wrap gap-2 mb-2">
+                                {size && <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded">{size}</span>}
+                                {pcd && <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded">{pcd}</span>}
+                            </div>
+                            <p className="font-bold text-primary text-lg">₹{(price * qty).toLocaleString("en-IN")}</p>
+                        </div>
                     </div>
-                )}
+                    
+                    {/* Quantity Selector */}
+                    <div className="w-full flex items-center justify-between border-t border-slate-200 dark:border-slate-800 pt-3">
+                        <span className="text-sm font-bold text-slate-700 dark:text-slate-300">Quantity</span>
+                        <div className="flex items-center gap-3 bg-slate-100 dark:bg-slate-800 rounded-lg p-1 border border-slate-200 dark:border-slate-700">
+                            <button 
+                                onClick={() => handleQtyChange(-1)} 
+                                disabled={qty <= 1}
+                                className="w-8 h-8 flex items-center justify-center rounded-md bg-white dark:bg-slate-900 shadow-sm text-slate-700 dark:text-slate-300 transition-all hover:bg-slate-50 active:scale-95 disabled:opacity-50 disabled:active:scale-100"
+                            >
+                                <span className="material-symbols-outlined text-sm">remove</span>
+                            </button>
+                            <span className="w-6 text-center font-bold text-slate-900 dark:text-white">{qty}</span>
+                            <button 
+                                onClick={() => handleQtyChange(1)} 
+                                disabled={qty >= 10}
+                                className="w-8 h-8 flex items-center justify-center rounded-md bg-white dark:bg-slate-900 shadow-sm text-slate-700 dark:text-slate-300 transition-all hover:bg-slate-50 active:scale-95 disabled:opacity-50 disabled:active:scale-100"
+                            >
+                                <span className="material-symbols-outlined text-sm">add</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            {/* Form Content */}
-            <div className="flex flex-col gap-2 px-4 pb-32">
+                    {/* Desktop CTA (Rendered in Right Column) */}
+                    <div className="hidden md:block w-full mt-4 border-t border-slate-200 dark:border-slate-800 pt-6">
+                        <button
+                            onClick={handleSubmit}
+                            className="flex w-full cursor-pointer items-center justify-center gap-3 overflow-hidden rounded-xl h-14 bg-primary text-white text-base font-bold leading-normal transition-all duration-300 hover:bg-blue-600 hover:shadow-[0_8px_20px_-6px_rgba(19,127,236,0.5)] hover:-translate-y-0.5 active:translate-y-0.5 active:scale-[0.98] group"
+                        >
+                            <span className="material-symbols-outlined transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">send</span>
+                            <span className="truncate uppercase tracking-wide">
+                                Submit Order Request
+                            </span>
+                        </button>
+                        <p className="mt-2 text-center text-xs text-slate-500 dark:text-slate-500">
+                            You will be redirected to WhatsApp to confirm order.
+                        </p>
+                    </div>
+                </div>
+
+                {/* Left Column: Form Content */}
+                <div className="flex flex-col gap-2 px-4 md:px-0 pt-4 pb-32 md:pb-8 order-2 md:order-1">
                 {/* Full Name */}
                 <div className="py-2 animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out fill-mode-both" style={{ animationDelay: '150ms' }}>
                     <label className="flex flex-col w-full group">
@@ -181,7 +276,7 @@ function OrderForm() {
                             name="address"
                             value={formData.address}
                             onChange={handleChange}
-                            className="form-input flex w-full rounded-lg text-slate-900 dark:text-white border border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-900 focus:border-primary dark:focus:border-primary focus:ring-2 focus:ring-primary/20 min-h-[120px] placeholder:text-slate-400 dark:placeholder:text-slate-600 p-4 text-base resize-none transition-all duration-300 outline-none hover:border-slate-400 dark:hover:border-slate-600"
+                            className="form-input flex w-full rounded-lg text-slate-900 dark:text-white border border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-900 focus:border-primary dark:focus:border-primary focus:ring-2 focus:ring-primary/20 min-h-30 placeholder:text-slate-400 dark:placeholder:text-slate-600 p-4 text-base resize-none transition-all duration-300 outline-none hover:border-slate-400 dark:hover:border-slate-600"
                             placeholder="House No, Building, Street, Landmark"
                         />
                     </label>
@@ -245,9 +340,10 @@ function OrderForm() {
                     </label>
                 </div>
             </div>
+            </div>
 
-            {/* Sticky Footer CTA */}
-            <div className="fixed bottom-0 left-0 right-0 p-4 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] animate-in slide-in-from-bottom-full duration-500 ease-out">
+            {/* Mobile Sticky Footer CTA */}
+            <div className="md:hidden fixed bottom-0 left-0 right-0 p-4 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] animate-in slide-in-from-bottom-full duration-500 ease-out">
                 <button
                     onClick={handleSubmit}
                     className="flex w-full cursor-pointer items-center justify-center gap-3 overflow-hidden rounded-xl h-14 bg-primary text-white text-base font-bold leading-normal transition-all duration-300 hover:bg-blue-600 hover:shadow-[0_8px_20px_-6px_rgba(19,127,236,0.5)] hover:-translate-y-0.5 active:translate-y-0.5 active:scale-[0.98] group"

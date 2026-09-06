@@ -1,0 +1,100 @@
+[
+  {
+    "brand": "Mahindra",
+    "model": "Bolero",
+    "size": "15\"",
+    "pcd": "5x160",
+    "image": "/data/images/mahindra-bolero.jpg"
+  },
+  {
+    "brand": "Kia",
+    "model": "Sonet",
+    "size": "17\"",
+    "pcd": "5x114",
+    "image": "/data/images/kia-sonet.jpg"
+  },
+  {
+    "brand": "Audi",
+    "model": "A4",
+    "size": "17\"",
+    "pcd": "5x112",
+    "image": "/data/images/audi-a4.jpg"
+  },
+  {
+    "brand": "BMW",
+    "model": "M4",
+    "size": "17\"",
+    "pcd": "5x112",
+    "image": "/data/images/bmw-m4.jpg"
+  },
+  {
+    "brand": "Ford",
+    "model": "Figo",
+    "size": "15\"",
+    "pcd": "4x108",
+    "image": "/data/images/ford-figo.jpg"
+  },
+  {
+    "brand": "Renault",
+    "model": "Duster",
+    "size": "17\"",
+    "pcd": "5x114",
+    "image": "/data/images/renault-duster.jpg"
+  },
+  {
+    "brand": "Tata",
+    "model": "Punch",
+    "size": "16\"",
+    "pcd": "4x108",
+    "image": "/data/images/tata-punch.jpg"
+  },
+  {
+    "brand": "MG Motor",
+    "model": "Astor",
+    "size": "17\"",
+    "pcd": "5x114",
+    "image": "/data/images/mg-astor.jpg"
+  },
+  {
+    "brand": "Jeep",
+    "model": "Compass",
+    "size": "17\"",
+    "pcd": "5x110",
+    "image": "/data/images/jeep-compass.jpg"
+  },
+  {
+    "brand": "Mercedes-Benz",
+    "model": "A-Class",
+    "size": "19\"",
+    "pcd": "5x112",
+    "image": "/data/images/mercedes-benz-a-class.jpg"
+  },
+  {
+    "brand": "Volkswagen",
+    "model": "Polo",
+    "size": "17\"",
+    "pcd": "5x100",
+    "image": "/data/images/volkswagen-polo.jpg"
+  },
+  {
+    "brand": "BYD",
+    "model": "ATTO3",
+    "size": "17\"",
+    "pcd": "5x114",
+    "image": "/data/images/byd-atto3.jpg"
+  },
+  {
+    "brand": "Toyota",
+    "model": "Innova",
+    "size": "17\"",
+    "pcd": "5x114",
+    "image": "/data/images/toyota-innova.jpg"
+  },
+  {
+    "brand": "Maruti",
+    "model": "Swift",
+    "size": "17\"",
+    "pcd": "4x100",
+    "image": "/data/images/maruti-swift.jpg"
+  }
+]

@@ -1,32 +1,27 @@
 "use client";
 import { useEffect } from "react";
-import { usePathname } from "next/navigation";
 
 export default function ThemeProvider() {
-  const pathname = usePathname();
-
   useEffect(() => {
-    const isDark = localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
-    if (isDark) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [pathname]);
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    
+    const handleChange = (e: MediaQueryListEvent) => {
+      // Only change if user hasn't explicitly set a preference in localStorage
+      if (!('theme' in localStorage)) {
+        if (e.matches) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+        // Dispatch custom event to notify components like the Home toggle
+        window.dispatchEvent(new Event('themechange'));
+      }
+    };
+    
+    mediaQuery.addEventListener('change', handleChange);
+    
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, []);
 
-  return (
-    <script
-      dangerouslySetInnerHTML={{
-        __html: `
-          try {
-            if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-              document.documentElement.classList.add('dark')
-            } else {
-              document.documentElement.classList.remove('dark')
-            }
-          } catch (_) {}
-        `,
-      }}
-    />
-  );
+  return null;
 }

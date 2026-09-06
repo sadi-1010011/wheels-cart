@@ -26,7 +26,7 @@ export default function TabNavbar({ active }: { active?: string }) {
     ];
 
     return (
-        <nav className="fixed bottom-0 left-0 right-0 z-50 flex items-end justify-around border-t border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-background-dark/90 backdrop-blur-xl px-4 pb-6 pt-3 shadow-[0_-4px_24px_rgba(0,0,0,0.02)] dark:shadow-[0_-4px_24px_rgba(0,0,0,0.2)]">
+        <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 flex items-end justify-around border-t border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-background-dark/90 backdrop-blur-xl px-4 pb-6 pt-3 shadow-[0_-4px_24px_rgba(0,0,0,0.02)] dark:shadow-[0_-4px_24px_rgba(0,0,0,0.2)]">
             {
                 links.map((link) => {
                     const isActive = active === link.name.toLowerCase();

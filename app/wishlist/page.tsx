@@ -25,9 +25,16 @@ function WishlistContent() {
                         arrow_back
                     </span>
                 </div>
-                <h2 className="ml-2 text-lg font-bold leading-tight tracking-tight flex-1">
+                <h2 className="ml-2 text-lg md:text-xl font-bold leading-tight tracking-tight flex-1 md:flex-none text-center md:text-left">
                     My Wishlist
                 </h2>
+
+                {/* Desktop Navigation */}
+                <nav className="hidden md:flex flex-1 items-center justify-center gap-8">
+                    <a href="/" className="text-sm font-bold text-slate-700 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors">Home</a>
+                    <a href="/shop" className="text-sm font-bold text-slate-700 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors">Shop</a>
+                    <a href="/wishlist" className="text-sm font-bold text-primary dark:text-primary transition-colors">Wishlist</a>
+                </nav>
                 <div className="flex w-10 items-center justify-end mr-2">
                     <span className="material-symbols-outlined text-primary text-xl">favorite</span>
                     <span className="absolute top-4.5 right-3 flex h-4 w-4 mr-2 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white shadow-sm shadow-primary/40 animate-pulse">
@@ -43,24 +50,20 @@ function WishlistContent() {
                             <span className="material-symbols-outlined text-6xl" style={{ fontVariationSettings: '"FILL" 1' }}>favorite</span>
                         </div>
                         <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-2">Your wishlist is empty</h3>
-                        <p className="text-sm text-center text-slate-500 dark:text-slate-400 mb-8 max-w-[250px]">
-                            Looks like you haven&apos;t added any items to your wishlist yet.
+                        <p className="text-sm text-center text-slate-500 dark:text-slate-400 mb-8 max-w-62.5">
+                            Looks like you haven&apos;t added any wheels to your wishlist yet.
                         </p>
                         <button
                             onClick={() => router.push("/shop")}
                             className="px-6 py-3 bg-primary text-white rounded-xl font-bold text-sm transition-all duration-300 shadow-lg shadow-primary/20 hover:-translate-y-1 active:scale-95 flex items-center gap-2 group"
                         >
-                            <span>Explore Products</span>
+                            <span>Explore Wheels</span>
                             <span className="material-symbols-outlined text-sm transition-transform duration-300 group-hover:translate-x-1">arrow_forward</span>
                         </button>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6 md:p-4">
                         {wishlistedProducts.map((product, index) => {
-                            const discount = product.originalPrice
-                                ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
-                                : 0;
-
                             return (
                                 <div
                                     key={product.id}
@@ -78,13 +81,6 @@ function WishlistContent() {
                                             src={product.image}
                                         />
                                         <div className="absolute inset-0 bg-linear-to-tr from-white/0 via-white/20 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 mix-blend-overlay rotate-12 scale-[2] pointer-events-none" />
-
-                                        {discount > 0 && (
-                                            <span className="absolute top-2 left-2 bg-primary text-white text-[10px] font-bold px-2 py-0.5 rounded-md shadow-sm">
-                                                {discount}% OFF
-                                            </span>
-                                        )}
-
                                         <button 
                                             onClick={(e) => {
                                                 e.stopPropagation();
@@ -103,11 +99,27 @@ function WishlistContent() {
                                         <h3 className="text-slate-900 dark:text-slate-100 text-sm font-bold leading-tight group-hover:text-primary transition-colors line-clamp-2">
                                             {product.name}
                                         </h3>
-                                        <div className="flex items-baseline gap-2">
-                                            <p className="text-primary text-base font-extrabold">₹{product.price.toLocaleString("en-IN")}</p>
-                                            {product.originalPrice && (
-                                                <p className="text-slate-400 text-xs line-through">₹{product.originalPrice.toLocaleString("en-IN")}</p>
-                                            )}
+                                        <div className="mt-1">
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    e.preventDefault();
+                                                    const message = `Hi! I'm interested in this alloy wheel:\n\n*${product.name}*\n*Size:* ${product.size}\n*PCD:* ${product.pcd}\n*Finish:* ${product.finish}\n\nProduct: ${window.location.origin}/product?id=${product.id}`;
+                                                    window.open(`https://wa.me/916238998062?text=${encodeURIComponent(message)}`, '_blank');
+                                                }}
+                                                className="w-full flex items-center justify-center gap-1.5 h-8 rounded-md bg-primary/10 text-primary text-xs font-bold transition-all duration-300 hover:bg-primary hover:text-white active:scale-95 group-hover:bg-primary group-hover:text-white"
+                                            >
+                                                <span className="material-symbols-outlined text-[14px]">forum</span>
+                                                Enquire
+                                            </button>
+                                        </div>
+                                        <div className="flex items-center gap-2 mt-1">
+                                            <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800/50 px-2 py-0.5 rounded">
+                                                {product.size}
+                                            </span>
+                                            <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800/50 px-2 py-0.5 rounded">
+                                                {product.pcd}
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
