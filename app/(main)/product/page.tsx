@@ -4,6 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import products from "@/data/products";
 import { useWishlist } from "@/hooks/useWishlist";
+import { SiWhatsapp } from "react-icons/si";
 
 function ProductContent() {
     const router = useRouter();
@@ -50,31 +51,19 @@ function ProductContent() {
     };
 
     const handleWhatsAppOrder = async () => {
-        const message = `Hi! I'm interested in this alloy wheel:\n\n*${product.name}*\n*Size:* ${product.size}\n*PCD:* ${product.pcd}\n*Finish:* ${product.finish}\n\nProduct: ${window.location.href}`;
-
-        try {
-            // Try sharing with image via Web Share API (works well on mobile)
-            const response = await fetch(product.image);
-            const blob = await response.blob();
-            const file = new File([blob], `${product.brand.toLowerCase()}-${product.model.toLowerCase()}-wheel.jpg`, { type: blob.type });
-
-            if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                await navigator.share({
-                    text: message,
-                    files: [file],
-                });
-                return;
-            }
-        } catch (err) {
-            console.log("Image share fallback", err);
-        }
-
-        // Fallback: open WhatsApp with text only
-        window.open(`https://wa.me/916238998062?text=${encodeURIComponent(message)}`, '_blank');
+        const params = new URLSearchParams({
+            item: product.name,
+            size: product.size,
+            pcd: product.pcd,
+            finish: product.finish,
+            price: product.price.toString(),
+            image: product.image
+        });
+        router.push(`/order?${params.toString()}`);
     };
 
     return (
-        <div className="relative flex min-h-screen w-full flex-col bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 antialiased overflow-x-hidden">
+        <main className="flex-1 pb-32 md:pb-12 w-full">
             <header className="sticky top-0 z-50 flex items-center bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md p-4 justify-between border-b border-slate-200 dark:border-slate-800 animate-in slide-in-from-top-4 fade-in duration-500">
                 <div onClick={()=> router.back()} className="flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 transition-all duration-300 hover:scale-110 active:scale-90 cursor-pointer">
                     <span className="material-symbols-outlined">arrow_back_ios_new</span>
@@ -108,7 +97,7 @@ function ProductContent() {
                 </div>
             </header>
             
-            <main className="flex-1 pb-32 md:pb-12 md:pt-8 md:px-8">
+            <div className="md:pt-8 md:px-8">
                 <div className="md:grid md:grid-cols-2 md:gap-12">
                     
                     {/* Left Column: Image Gallery */}
@@ -239,26 +228,26 @@ function ProductContent() {
                 </div>
                             {/* Desktop CTA */}
                             <div className="hidden md:flex gap-3 mt-4 pt-6 border-t border-slate-200 dark:border-slate-800">
-                                <button onClick={handleWhatsAppOrder} className="flex-1 flex items-center justify-center gap-2 h-14 rounded-xl border border-primary/30 text-white bg-primary transition-all duration-300 hover:bg-blue-600 hover:shadow-[0_8px_20px_-6px_rgba(19,127,236,0.5)] active:scale-[0.98] group">
-                                    <span className="material-symbols-outlined transition-transform duration-300 group-hover:scale-110">forum</span>
+                                <button onClick={handleWhatsAppOrder} className="flex-1 flex items-center justify-center gap-2 h-14 rounded-xl bg-[#25D366]/10 text-[#128C7E] dark:text-[#25D366] transition-all duration-300 hover:bg-[#25D366] hover:text-white dark:hover:text-white active:scale-[0.98] group hover:shadow-[0_8px_20px_-6px_rgba(37,211,102,0.5)]">
+                                    <SiWhatsapp className="text-[24px] transition-transform duration-300 group-hover:scale-110" />
                                     <span className="font-extrabold tracking-wide text-lg">ENQUIRE ON WHATSAPP</span>
                                 </button>
                             </div>
 
                         </div>
                     </div>
-            </main>
+                </div>
 
             {/* Mobile Sticky CTA */}
             <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-background-light dark:bg-background-dark border-t border-slate-200 dark:border-slate-800 px-4 pt-4 pb-8 animate-in slide-in-from-bottom-full duration-500 ease-out shadow-[0_-10px_40px_rgba(0,0,0,0.1)]">
                 <div className="flex gap-3 mb-4">
-                    <button onClick={handleWhatsAppOrder} className="flex-1 flex items-center justify-center gap-2 h-14 rounded-xl border border-primary/30 text-white bg-primary transition-all duration-300 hover:bg-blue-600 hover:shadow-[0_8px_20px_-6px_rgba(19,127,236,0.5)] active:scale-[0.98] group">
-                        <span className="material-symbols-outlined transition-transform duration-300 group-hover:scale-110">forum</span>
+                    <button onClick={handleWhatsAppOrder} className="flex-1 flex items-center justify-center gap-2 h-14 rounded-xl bg-[#25D366]/10 text-[#128C7E] dark:text-[#25D366] transition-all duration-300 hover:bg-[#25D366] hover:text-white dark:hover:text-white active:scale-[0.98] group hover:shadow-[0_8px_20px_-6px_rgba(37,211,102,0.5)]">
+                        <SiWhatsapp className="text-[24px] transition-transform duration-300 group-hover:scale-110" />
                         <span className="font-extrabold tracking-wide text-lg">ENQUIRE ON WHATSAPP</span>
                     </button>
                 </div>
             </div>
-        </div>
+        </main>
     );
 }
 
