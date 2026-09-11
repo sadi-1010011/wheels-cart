@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
+import { siteConfig } from "@/config/site";
 
 function OrderForm() {
     const router = useRouter();
@@ -84,7 +85,7 @@ function OrderForm() {
 
         // Fallback: Open WhatsApp directly
         const encodedMessage = encodeURIComponent(message);
-        window.open(`https://wa.me/916238998062?text=${encodedMessage}`, '_blank');
+        window.open(`https://wa.me/${siteConfig.whatsappNumber}?text=${encodedMessage}`, '_blank');
 
         // Show success UI and redirect
         setShowSuccess(true);
@@ -94,25 +95,7 @@ function OrderForm() {
     };
 
     return (
-        <div className="relative flex min-h-screen w-full flex-col  bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 antialiased overflow-x-hidden">
-            {/* Top Navigation */}
-            <div className="sticky top-0 z-10 flex items-center bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md p-4 border-b border-slate-200 dark:border-slate-800 animate-in slide-in-from-top-4 fade-in duration-500">
-                <div onClick={() => router.back()} className="flex size-10 shrink-0 items-center justify-center cursor-pointer rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 transition-all duration-300 hover:scale-110 active:scale-90 md:hidden">
-                    <span className="material-symbols-outlined text-slate-900 dark:text-slate-100">
-                        arrow_back
-                    </span>
-                </div>
-                <h2 className="ml-2 text-lg md:text-xl font-bold leading-tight tracking-tight flex-1 text-center md:text-left">
-                    Order Request Form
-                </h2>
-
-                {/* Desktop Navigation */}
-                <nav className="hidden md:flex flex-1 items-center justify-end gap-8 pr-4">
-                    <a href="/" className="text-sm font-bold text-slate-700 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors">Home</a>
-                    <a href="/shop" className="text-sm font-bold text-slate-700 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors">Shop</a>
-                </nav>
-            </div>
-
+        <main className="w-full relative">
             <div className="md:grid md:grid-cols-2 md:gap-8 md:p-8 md:max-w-6xl md:mx-auto w-full">
                 {/* Right Column: Order Summary */}
                 <div className="flex flex-col gap-4 p-4 md:px-0 md:pt-4 order-1 md:order-2 md:sticky md:top-24 h-fit">
@@ -184,7 +167,7 @@ function OrderForm() {
                         >
                             <span className="material-symbols-outlined transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">send</span>
                             <span className="truncate uppercase tracking-wide">
-                                Submit Order Request
+                                Submit Enquiry
                             </span>
                         </button>
                         <p className="mt-2 text-center text-xs text-slate-500 dark:text-slate-500">
@@ -343,24 +326,24 @@ function OrderForm() {
             </div>
 
             {/* Mobile Sticky Footer CTA */}
-            <div className="md:hidden fixed bottom-0 left-0 right-0 p-4 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] animate-in slide-in-from-bottom-full duration-500 ease-out">
+            <div className="md:hidden fixed bottom-0 left-0 right-0 p-4 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] animate-in slide-in-from-bottom-full duration-500 ease-out z-50">
                 <button
                     onClick={handleSubmit}
                     className="flex w-full cursor-pointer items-center justify-center gap-3 overflow-hidden rounded-xl h-14 bg-primary text-white text-base font-bold leading-normal transition-all duration-300 hover:bg-blue-600 hover:shadow-[0_8px_20px_-6px_rgba(19,127,236,0.5)] hover:-translate-y-0.5 active:translate-y-0.5 active:scale-[0.98] group"
                 >
                     <span className="material-symbols-outlined transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">send</span>
                     <span className="truncate uppercase tracking-wide">
-                        Submit Order Request
+                        Submit Enquiry
                     </span>
                 </button>
                 <p className="mt-2 text-center text-xs text-slate-500 dark:text-slate-500">
-                    You will be redirected to WhatsApp to confirm order.
+                    You will be redirected to WhatsApp to confirm enquiry.
                 </p>
             </div>
 
             {/* Success Overlay */}
             {showSuccess && (
-                <div className="fixed inset-0 z-100 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-md animate-in fade-in duration-300">
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-md animate-in fade-in duration-300">
                     <div className="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 flex flex-col items-center text-center shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] max-w-sm w-full animate-in zoom-in-95 slide-in-from-bottom-8 duration-500 ease-out">
                         <div className="w-20 h-20 bg-green-500/10 text-green-500 rounded-full flex items-center justify-center mb-6 animate-bounce">
                             <span className="material-symbols-outlined text-5xl">check_circle</span>
@@ -377,7 +360,7 @@ function OrderForm() {
                     </div>
                 </div>
             )}
-        </div>
+        </main>
     );
 }
 
